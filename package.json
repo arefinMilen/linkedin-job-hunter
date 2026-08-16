@@ -1,0 +1,28 @@
+{
+  "name": "linkedin-job-hunter",
+  "version": "1.0.0",
+  "description": "Automated LinkedIn Remote Job Hunter & Matcher Agent — scrapes remote jobs, evaluates against resume via Gemini 2.0 Flash, and alerts on Telegram.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": [
+    "linkedin",
+    "job-hunter",
+    "gemini",
+    "telegram",
+    "automation",
+    "ai",
+    "remote-jobs"
+  ],
+  "author": "Md Samsul Arefin",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "apify-client": "^2.25.0",
+    "dotenv": "^17.4.2",
+    "node-telegram-bot-api": "^1.2.0"
+  }
+}

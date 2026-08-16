@@ -1,0 +1,40 @@
+name: 🎯 Daily LinkedIn Job Hunter
+
+on:
+  schedule:
+    # Runs every day at 08:00 UTC (2:00 PM BST)
+    - cron: "0 8 * * *"
+  workflow_dispatch: # Allow manual triggers from GitHub UI
+
+permissions:
+  contents: read
+
+jobs:
+  hunt:
+    name: Scrape → Evaluate → Notify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Run Job Hunter Agent
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SEARCH_QUERIES: ${{ vars.SEARCH_QUERIES || 'remote software engineer,remote fullstack developer,remote next.js developer' }}
+          MATCH_THRESHOLD: ${{ vars.MATCH_THRESHOLD || '75' }}
+          MAX_JOBS_PER_QUERY: ${{ vars.MAX_JOBS_PER_QUERY || '25' }}
+        run: npm start
