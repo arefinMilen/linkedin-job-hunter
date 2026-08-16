@@ -40,7 +40,7 @@ try {
 const config = Object.freeze({
   // Gemini
   geminiApiKey: process.env.GEMINI_API_KEY,
-  geminiModel: process.env.GEMINI_MODEL || "gemini-3.5-flash",
+  geminiModel: process.env.GEMINI_MODEL || "gemini-3.1-flash-lite",
 
   // Apify
   apifyToken: process.env.APIFY_API_TOKEN,
