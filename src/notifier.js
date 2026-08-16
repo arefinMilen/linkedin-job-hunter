@@ -48,6 +48,19 @@ export async function notifyMatches(evaluatedJobs) {
   return { sent, skipped: evaluatedJobs.length - highMatches.length };
 }
 
+/**
+ * Send an instant Telegram notification for a single high-match job.
+ * @param {Object} job
+ */
+export async function sendSingleAlert(job) {
+  try {
+    await sendMessage(buildJobCard(job));
+    console.log(`   📱  Sent Telegram alert instantly for: "${job.title}"`);
+  } catch (err) {
+    console.error(`   ⚠️  Failed to send instant Telegram alert for "${job.title}": ${err.message}`);
+  }
+}
+
 // ── Message builders ─────────────────────────────────────────────────────────
 
 function buildSummaryHeader(matchCount, totalCount) {

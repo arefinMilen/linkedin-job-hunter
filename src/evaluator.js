@@ -5,6 +5,7 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import config from "./config.js";
+import { sendSingleAlert } from "./notifier.js";
 
 const genAI = new GoogleGenerativeAI(config.geminiApiKey);
 const model = genAI.getGenerativeModel({ model: config.geminiModel });
@@ -25,10 +26,16 @@ export async function evaluateJobs(jobs) {
     try {
       console.log(`🤖  ${progress} Evaluating: ${job.title} @ ${job.company}`);
       const evaluation = await evaluateSingleJob(job);
-      results.push({ ...job, ...evaluation });
+      const enrichedJob = { ...job, ...evaluation };
+      results.push(enrichedJob);
 
       const icon = evaluation.matchScore >= config.matchThreshold ? "🟢" : "⚪";
       console.log(`   ${icon}  Score: ${evaluation.matchScore}%`);
+
+      // Send Telegram alert INSTANTLY if job matches threshold
+      if (evaluation.matchScore >= config.matchThreshold) {
+        await sendSingleAlert(enrichedJob);
+      }
     } catch (err) {
       console.error(
         `   ❌  Evaluation failed for "${job.title}": ${err.message}`
